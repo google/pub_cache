@@ -112,7 +112,7 @@ class Application {
 
   Version get version {
     PackageRef ref = getDefiningPackageRef();
-    return ref == null ? null : version;
+    return ref == null ? null : ref.version;
   }
 
   PackageRef getDefiningPackageRef() {
