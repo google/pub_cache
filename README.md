@@ -2,7 +2,7 @@
 
 A library to reflect on the local pub cache.
 
-[![Build Status](https://travis-ci.org/dart-lang/usage.svg)](https://travis-ci.org/dart-lang/usage)
+[![Build Status](https://travis-ci.org/dart-lang/pubcache.svg)](https://travis-ci.org/dart-lang/pubcache)
 
 ## Features and bugs
 
