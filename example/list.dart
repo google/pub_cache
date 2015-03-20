@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:pubcache/pubcache.dart';
+import 'package:pub_cache/pub_cache.dart';
 
 void main(List<String> args) {
   PubCache cache = new PubCache();
