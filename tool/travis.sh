@@ -7,6 +7,8 @@
 # Fast fail the script on failures.
 set -e
 
+pub global activate dart_coveralls
+
 # Verify that the libraries are error free.
 dartanalyzer --fatal-warnings \
   example/list.dart \
@@ -18,7 +20,6 @@ dart test/all.dart
 
 # Install dart_coveralls; gather and send coverage data.
 if [ "$COVERALLS_TOKEN" ]; then
-  pub global activate dart_coveralls
   pub global run dart_coveralls report \
     --token $COVERALLS_TOKEN \
     --retry 2 \
