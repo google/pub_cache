@@ -1,8 +1,8 @@
-name: pubcache
+name: pub_cache
 version: 0.0.1
 description: A library to reflect on the local pub cache.
 author: Dart Team <misc@dartlang.org>
-homepage: https://github.com/dart-lang/pubcache
+homepage: https://github.com/dart-lang/pub_cache
 
 environment:
   sdk: '>=1.0.0 <2.0.0'

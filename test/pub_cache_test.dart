@@ -2,12 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library pubcache_test;
+library pub_cache_test;
 
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
-import 'package:pubcache/pubcache.dart';
+import 'package:pub_cache/pub_cache.dart';
 import 'package:unittest/unittest.dart';
 
 void main() => defineTests();

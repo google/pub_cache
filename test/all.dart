@@ -2,8 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'pubcache_test.dart' as pubcache_test;
+import 'pub_cache_test.dart' as pub_cache_test;
 
 void main() {
-  pubcache_test.defineTests();
+  pub_cache_test.defineTests();
 }

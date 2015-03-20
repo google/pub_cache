@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>pubcache</name>
+	<name>pub_cache</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -17,6 +17,14 @@
 	<filteredResources>
 		<filter>
 			<id>1426872528570</id>
+			<name></name>
+			<type>30</type>
+			<matcher>
+				<id>com.google.dart.tools.core.packagesFolderMatcher</id>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1426882679114</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
