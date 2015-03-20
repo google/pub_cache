@@ -41,6 +41,16 @@ void defineTests() {
       PubCache cache = new PubCache();
       expect(cache.getPackageRefs(), isNotEmpty);
     });
+
+    test('getCachedPackages', () {
+      PubCache cache = new PubCache();
+      expect(cache.getCachedPackages(), isNotEmpty);
+    });
+
+    test('getAllPackageVersions', () {
+      PubCache cache = new PubCache();
+      expect(cache.getAllPackageVersions('path'), isNotEmpty);
+    });
   });
 
   group('Application', () {
@@ -58,6 +68,10 @@ void defineTests() {
 
     test('version', () {
       expect(app.version, isNotNull);
+    });
+
+    test('getDefiningPackageRef', () {
+      expect(app.getDefiningPackageRef().name, app.name);
     });
 
     test('getPackageRefs', () {

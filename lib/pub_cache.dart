@@ -10,19 +10,16 @@ import 'package:path/path.dart' as path;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
-// TODO: do things like get all the versions for a package?
-
 // TODO: get the latest version for a package?
 
 // TODO: get the latest non-dev version for a package?
 
-// TODO: get all the packages (id's only) in the pubcache
+// TODO: Scan for git packages.
 
 /**
- * TODO:
+ * A programattic API for reflecting on Pub's cache directory.
  */
 class PubCache {
-
   static Directory getSystemCacheLocation() {
     if (Platform.environment.containsKey('PUB_CACHE')) {
       return new Directory(Platform.environment['PUB_CACHE']);
@@ -52,9 +49,29 @@ class PubCache {
     return dir.existsSync() ? dir.listSync() : [];
   }
 
+  /**
+   * Return applications that have been installed via `pub global activate`.
+   */
   List<Application> getGlobalApplications() => _applications;
 
+  /**
+   * Get all the packages and their versions that have been installed into the
+   * cache.
+   */
   List<PackageRef> getPackageRefs() => _packageRefs;
+
+  /**
+   * Return the list of package names (not versions) that area available in the
+   * cache.
+   */
+  List<String> getCachedPackages() =>
+      new Set.from(getPackageRefs().map((p) => p.name)).toList();
+
+  /**
+   * Return all available cached versions for a given package.
+   */
+  List<PackageRef> getAllPackageVersions(String packageName) =>
+      getPackageRefs().where((p) => p.name == packageName).toList();
 
   void _parse() {
     // Read the activated applications.
@@ -65,8 +82,6 @@ class PubCache {
       _applications = globalPackagesDir.listSync().map(
           (dir) => new Application._(this, dir)).toList();
     }
-
-    // TODO: Scan for git packages.
 
     // Scan hosted packages - just pub.dartlang.org for now.
     _packageRefs = [];
@@ -90,15 +105,18 @@ class Application {
   final Directory _dir;
 
   List<PackageRef> _packageRefs;
-  Version _version;
 
   Application._(this._cache, this._dir);
 
   String get name => path.basename(_dir.path);
 
-  Version get version {
-    if (_packageRefs == null) _parsePubspecLock();
-    return _version;
+  Version get version => getDefiningPackageRef().version;
+
+  PackageRef getDefiningPackageRef() {
+    for (PackageRef ref in getPackageRefs()) {
+      if (ref.name == name) return ref;
+    }
+    return null;
   }
 
   List<PackageRef> getPackageRefs() {
@@ -116,15 +134,6 @@ class Application {
       Map m = packages[key];
       return new _AppPackageRef(_cache, m['source'], key, m['version']);
     }).toList();
-
-    String name = this.name;
-
-    for (PackageRef ref in _packageRefs) {
-      if (ref.name == name) {
-        _version = ref.version;
-        break;
-      }
-    }
   }
 }
 
