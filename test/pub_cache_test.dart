@@ -31,5 +31,82 @@ void defineTests() {
       PubCache cache = new PubCache();
       expect(cache.getBinaries(), isNotNull);
     });
+
+    test('getGlobalApplications', () {
+      PubCache cache = new PubCache();
+      expect(cache.getGlobalApplications(), isNotEmpty);
+    });
+
+    test('getPackageRefs', () {
+      PubCache cache = new PubCache();
+      expect(cache.getPackageRefs(), isNotEmpty);
+    });
+  });
+
+  group('Application', () {
+    PubCache cache;
+    Application app;
+
+    setUp(() {
+      cache = new PubCache();
+      app = cache.getGlobalApplications().first;
+    });
+
+    test('name', () {
+      expect(app.name, isNotEmpty);
+    });
+
+    test('version', () {
+      expect(app.version, isNotNull);
+    });
+
+    test('getPackageRefs', () {
+      expect(app.getPackageRefs(), isNotEmpty);
+    });
+
+    test('toString', () {
+      expect(app.toString(), isNotEmpty);
+    });
+  });
+
+  group('PackageRef', () {
+    PubCache cache;
+    Application app;
+    PackageRef ref;
+
+    setUp(() {
+      cache = new PubCache();
+      app = cache.getGlobalApplications().first;
+      ref = app.getPackageRefs().first;
+    });
+
+    test('name', () {
+      expect(ref.name, isNotEmpty);
+    });
+
+    test('==', () {
+      PackageRef ref0 = app.getPackageRefs()[0];
+      PackageRef ref1 = app.getPackageRefs()[1];
+
+      expect(ref0, equals(ref0));
+      expect(ref0, isNot(equals(ref1)));
+    });
+
+    test('resolve', () {
+      expect(ref.resolve(), isNotNull);
+    });
+
+    test('toString', () {
+      expect(ref.toString(), isNotEmpty);
+    });
+  });
+
+  group('Package', () {
+    test('toString', () {
+      PubCache cache = new PubCache();
+      Package p = cache.getPackageRefs().first.resolve();
+      expect(p, isNotNull);
+      expect(p.toString(), isNotEmpty);
+    });
   });
 }
