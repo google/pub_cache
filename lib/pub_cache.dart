@@ -61,7 +61,7 @@ class PubCache {
   List<PackageRef> getPackageRefs() => _packageRefs;
 
   /**
-   * Return the list of package names (not versions) that area available in the
+   * Return the list of package names (not versions) that are available in the
    * cache.
    */
   List<String> getCachedPackages() =>
@@ -110,7 +110,10 @@ class Application {
 
   String get name => path.basename(_dir.path);
 
-  Version get version => getDefiningPackageRef().version;
+  Version get version {
+    PackageRef ref = getDefiningPackageRef();
+    return ref == null ? null : version;
+  }
 
   PackageRef getDefiningPackageRef() {
     for (PackageRef ref in getPackageRefs()) {
