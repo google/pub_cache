@@ -9,7 +9,9 @@ set -e
 
 # Verify that the libraries are error free.
 dartanalyzer --fatal-warnings \
-  lib/sample.dart
+  example/list.dart
+  lib/pubcache.dart
+  test/all.dart
 
 # Run the tests.
 dart test/all.dart

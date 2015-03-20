@@ -7,7 +7,10 @@ homepage: https://github.com/dart-lang/pubcache
 environment:
   sdk: '>=1.0.0 <2.0.0'
 
-#dependencies:
-#  lib_name: any
+dependencies:
+  path: any
+  pub_semver: any
+  yaml: any
+
 dev_dependencies:
   unittest: any
