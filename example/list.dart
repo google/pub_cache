@@ -3,12 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:pubcache/pubcache.dart';
-import 'package:unittest/unittest.dart';
 
-main() {
-  group('A group of tests', () {
-    test('First Test', () {
+void main(List<String> args) {
+  PubCache cache = new PubCache();
 
-    });
+  print('activated applications:');
+
+  cache.getGlobalApplications().forEach((app) {
+    print('  ${app}');
   });
 }
