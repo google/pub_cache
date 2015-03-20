@@ -97,18 +97,18 @@ class Application {
   String get name => path.basename(_dir.path);
 
   Version get version {
-    if (_packageRefs == null) _parsePubspec();
+    if (_packageRefs == null) _parsePubspecLock();
     return _version;
   }
 
   List<PackageRef> getPackageRefs() {
-    if (_packageRefs == null) _parsePubspec();
+    if (_packageRefs == null) _parsePubspecLock();
     return _packageRefs;
   }
 
   String toString() => '${name} ${version}';
 
-  void _parsePubspec() {
+  void _parsePubspecLock() {
     File pubspecLock = new File(path.join(_dir.path, 'pubspec.lock'));
     Map doc = yaml.loadYaml(pubspecLock.readAsStringSync());
     Map packages = doc['packages'];
