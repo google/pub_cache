@@ -10,68 +10,83 @@ import 'package:path/path.dart' as path;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
-// TODO: get the latest version for a package?
-
-// TODO: get the latest non-dev version for a package?
-
-// TODO: Scan for git packages.
-
-/**
- * A programattic API for reflecting on Pub's cache directory.
- */
+/// A programmatic API for reflecting on Pub's cache directory.
 class PubCache {
+
+  /// Return the location of Pub's package cache.
   static Directory getSystemCacheLocation() {
-    if (Platform.environment.containsKey('PUB_CACHE')) {
-      return new Directory(Platform.environment['PUB_CACHE']);
+    Map env = Platform.environment;
+
+    if (env.containsKey('PUB_CACHE')) {
+      return new Directory(env['PUB_CACHE']);
     } else if (Platform.operatingSystem == 'windows') {
-      var appData = Platform.environment['APPDATA'];
-      return new Directory(path.join(appData, 'Pub', 'Cache'));
+      return new Directory(path.join(env['APPDATA'], 'Pub', 'Cache'));
     } else {
-      return new Directory('${Platform.environment['HOME']}/.pub-cache');
+      return new Directory('${env['HOME']}/.pub-cache');
     }
   }
 
+  // The location of the pub cache.
   final Directory location;
 
   List<Application> _applications;
   List<PackageRef> _packageRefs;
 
+  /// Create a pubcache instance. [dir] defaults to the default platform pub
+  /// cache location.
   PubCache([Directory dir]) :
       location = dir == null ? getSystemCacheLocation() : dir {
     _parse();
   }
 
-  /**
-   * Return the contents of `bin/` - the scripts for the activated applications.
-   */
-  List<File> getBinaries() {
+  /// Return the contents of `bin/` - the scripts for the activated applications.
+  List<File> getBinScripts() {
     Directory dir = _getSubDir(location, 'bin');
     return dir.existsSync() ? dir.listSync() : [];
   }
 
-  /**
-   * Return applications that have been installed via `pub global activate`.
-   */
+  /// Return applications that have been installed via `pub global activate`.
   List<Application> getGlobalApplications() => _applications;
 
-  /**
-   * Get all the packages and their versions that have been installed into the
-   * cache.
-   */
+  /// Get all the packages and their versions that have been installed into the
+  /// cache.
   List<PackageRef> getPackageRefs() => _packageRefs;
 
-  /**
-   * Return the list of package names (not versions) that are available in the
-   * cache.
-   */
+  /// Return the list of package names (not versions) that are available in the
+  /// cache.
   List<String> getCachedPackages() =>
       new Set.from(getPackageRefs().map((p) => p.name)).toList();
 
-  /**
-   * Return all available cached versions for a given package.
-   */
+  /// Return all available cached versions for a given package.
   List<PackageRef> getAllPackageVersions(String packageName) =>
       getPackageRefs().where((p) => p.name == packageName).toList();
+
+  /// Return the most recent verison of the given package contained in the
+  /// cache. This method will prefer to return only release verions. If
+  /// [includePreRelease] is true, then the very latest verision will be
+  /// returned, include pre-release versions.
+  PackageRef getLatestVersion(String packageName, {bool includePreRelease: false}) {
+    List<PackageRef> refs = getAllPackageVersions(packageName);
+
+    if (refs.isEmpty) return null;
+    if (refs.length == 1) return refs.first;
+
+    PackageRef latest = refs.first;
+
+    if (includePreRelease) {
+      for (int i = 1; i < refs.length; i++) {
+        if (refs[i].version > latest.version) latest = refs[i];
+      }
+    } else {
+      List<Version> versions = refs.map((ref) => ref.version).toList();
+      Version latestVersion = Version.primary(versions);
+      for (PackageRef ref in refs) {
+        if (ref.version == latestVersion) latest = ref;
+      }
+    }
+
+    return latest;
+  }
 
   void _parse() {
     // Read the activated applications.
@@ -94,12 +109,18 @@ class PubCache {
           .map((dir) => new _DirectoryPackageRef('hosted', dir))
           .toList();
     }
+
+    // TODO: Scan for git packages (ignore the git/cache directory).
+    // ace-a1a140cc933e7d44d2955a6d6033308754bb9235
+
   }
 
   Directory _getSubDir(Directory dir, String name) =>
       new Directory(path.join(dir.path, name));
 }
 
+/// A Dart application; a package with an entry-point, available via `pub global
+/// activate`.
 class Application {
   final PubCache _cache;
   final Directory _dir;
@@ -108,13 +129,17 @@ class Application {
 
   Application._(this._cache, this._dir);
 
+  /// The name of the defining package.
   String get name => path.basename(_dir.path);
 
+  /// The version of the application and of the defining package.
   Version get version {
     PackageRef ref = getDefiningPackageRef();
     return ref == null ? null : ref.version;
   }
 
+  /// Return the reference to the defining package. This is the package that
+  /// defines the application.
   PackageRef getDefiningPackageRef() {
     for (PackageRef ref in getPackageRefs()) {
       if (ref.name == name) return ref;
@@ -122,6 +147,8 @@ class Application {
     return null;
   }
 
+  /// Return all the package references for the application. This includes the
+  /// defining package as well as the direct and transitive dependencies.
   List<PackageRef> getPackageRefs() {
     if (_packageRefs == null) _parsePubspecLock();
     return _packageRefs;
@@ -140,11 +167,18 @@ class Application {
   }
 }
 
+/// A package reference, including the package name and version. This package
+/// reference can be resolved to the actual package on disk.
 abstract class PackageRef {
+  /// The type of the package reference. Valid types include `hosted` and `git`.
   String get sourceType;
+  /// The name of the package.
   String get name;
+  /// The version of the package.
   Version get version;
 
+  /// Resolve the package reference into the actual package, including the
+  /// location on disk.
   Package resolve();
 
   bool operator ==(other) {
@@ -197,6 +231,8 @@ class _DirectoryPackageRef extends PackageRef {
   Package resolve() => new Package(directory, name, version);
 }
 
+/// A representation of a package, including the name, version, and location on
+/// disk.
 class Package {
   final Directory location;
   final String name;
