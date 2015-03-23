@@ -29,7 +29,7 @@ void defineTests() {
 
     test('getBinaries', () {
       PubCache cache = new PubCache();
-      expect(cache.getBinaries(), isNotNull);
+      expect(cache.getBinScripts(), isNotNull);
     });
 
     test('getGlobalApplications', () {
@@ -50,6 +50,16 @@ void defineTests() {
     test('getAllPackageVersions', () {
       PubCache cache = new PubCache();
       expect(cache.getAllPackageVersions('path'), isNotEmpty);
+    });
+
+    test('getLatestVersion', () {
+      PubCache cache = new PubCache();
+      expect(cache.getLatestVersion('path'), isNotNull);
+    });
+
+    test('getLatestVersion.dev', () {
+      PubCache cache = new PubCache();
+      expect(cache.getLatestVersion('path', includePreRelease: true), isNotNull);
     });
   });
 

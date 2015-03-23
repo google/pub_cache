@@ -7,9 +7,15 @@ import 'package:pub_cache/pub_cache.dart';
 void main(List<String> args) {
   PubCache cache = new PubCache();
 
-  print('activated applications:');
-
-  cache.getGlobalApplications().forEach((app) {
+  var apps = cache.getGlobalApplications();
+  print('${apps.length} activated applications:');
+  apps.forEach((app) {
     print('  ${app}');
+  });
+
+  var packages = cache.getCachedPackages();
+  print('\n${packages.length} packages in cache:');
+  packages.forEach((pkg) {
+    print('  ${pkg}');
   });
 }
