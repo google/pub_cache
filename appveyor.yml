@@ -1,0 +1,17 @@
+# Copyright (c) 2015, the Dart project authors.  Please see the AUTHORS file
+# for details. All rights reserved. Use of this source code is governed by a
+# BSD-style license that can be found in the LICENSE file.
+
+install:
+  - cinst -y dart-sdk
+  - ps: $env:PATH = "$env:PATH;c:\tools\dart-sdk\bin"
+  - ps: $env:PATH = "$env:PATH;c:\Users\appveyor\AppData\Roaming\Pub\Cache\bin"
+  - pub get
+
+build: off
+
+test_script:
+  - dartanalyzer --fatal-warnings example\list.dart lib\pub_cache.dart test\all.dart
+  # We need at least one activated application for our test suite.
+  - pub global activate dart_coveralls
+  - dart test\all.dart
