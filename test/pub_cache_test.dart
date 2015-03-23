@@ -10,21 +10,6 @@ import 'package:path/path.dart' as path;
 import 'package:pub_cache/pub_cache.dart';
 import 'package:unittest/unittest.dart';
 
-void main() {
-  // We need at least one activated application for our test suite.
-  PubCache cache = new PubCache();
-  print('apps: ' + cache.getGlobalApplications().toString());
-
-  if (cache.getGlobalApplications().isEmpty) {
-    ProcessResult result = Process.runSync('pub', ['global', 'activate', 'dart_coveralls']);
-    print(result.exitCode);
-    print(result.stdout);
-    print(result.stderr);
-  }
-
-  defineTests();
-}
-
 void defineTests() {
   final String cacheDirName = Platform.isWindows ? 'Cache' : 'pub-cache';
 

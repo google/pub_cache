@@ -11,8 +11,5 @@ install:
 build: off
 
 test_script:
-  - dart example\list.dart
-  - pub global activate dart_coveralls
-  - dart example\list.dart
   - dartanalyzer --fatal-warnings example\list.dart lib\pub_cache.dart test\all.dart
   - dart test\all.dart
