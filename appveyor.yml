@@ -12,4 +12,6 @@ build: off
 
 test_script:
   - dartanalyzer --fatal-warnings example\list.dart lib\pub_cache.dart test\all.dart
+  # We need at least one activated application for our test suite.
+  - pub global activate dart_coveralls
   - dart test\all.dart
