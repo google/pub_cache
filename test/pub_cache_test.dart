@@ -12,7 +12,10 @@ import 'package:unittest/unittest.dart';
 
 void main() {
   // We need at least one activated application for our test suite.
-  if (new PubCache().getGlobalApplications().isEmpty) {
+  PubCache cache = new PubCache();
+  print('apps: ' + cache.getGlobalApplications().toString());
+
+  if (cache.getGlobalApplications().isEmpty) {
     ProcessResult result = Process.runSync('pub', ['global', 'activate', 'dart_coveralls']);
     print(result.exitCode);
     print(result.stdout);
