@@ -10,21 +10,30 @@ import 'package:path/path.dart' as path;
 import 'package:pub_cache/pub_cache.dart';
 import 'package:unittest/unittest.dart';
 
-void main() => defineTests();
+void main() {
+  // We need at least one activated application for our test suite.
+  if (new PubCache().getGlobalApplications().isEmpty) {
+    Process.runSync('pub', ['global', 'activate', 'dart_coveralls']);
+  }
+
+  defineTests();
+}
 
 void defineTests() {
+  final String cacheDirName = Platform.isWindows ? 'Cache' : 'pub-cache';
+
   group('PubCache', () {
     test('getSystemCacheLocation', () {
       Directory cacheDir = PubCache.getSystemCacheLocation();
       expect(cacheDir, isNotNull);
-      expect(path.basename(cacheDir.path), contains('pub-cache'));
+      expect(path.basename(cacheDir.path), contains(cacheDirName));
     });
 
     test('PubCache', () {
       PubCache cache = new PubCache();
       expect(cache, isNotNull);
       expect(cache.location, isNotNull);
-      expect(path.basename(cache.location.path), contains('pub-cache'));
+      expect(path.basename(cache.location.path), contains(cacheDirName));
     });
 
     test('getBinaries', () {
