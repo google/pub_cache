@@ -135,18 +135,38 @@ void defineTests() {
   });
 
   group('integration', () {
-    test('list', () {
+    test('list apps', () {
+      StringBuffer buf = new StringBuffer();
       PubCache cache = new PubCache();
       var apps = cache.getGlobalApplications();
-      print('${apps.length} activated applications:');
-      apps.forEach((app) => print('  ${app}'));
+      apps.forEach((app) => buf.writeln('  ${app}'));
+      expect(buf.toString(), isNotEmpty);
+    });
 
+    test('list packages', () {
+      StringBuffer buf = new StringBuffer();
+      PubCache cache = new PubCache();
       var packages = cache.getCachedPackages();
-      print('\n${packages.length} packages in cache:');
       packages.forEach((pkg) {
         List versions = cache.getAllPackageVersions(pkg);
-        print('  ${pkg} [${versions.map((p) => p.version.toString()).join(', ')}]');
+        buf.writeln(
+            '  ${pkg} [${versions.map((p) => p.version.toString()).join(', ')}]');
       });
+      expect(buf.toString(), isNotEmpty);
+    });
+
+    test('everything resolves', () {
+      PubCache cache = new PubCache();
+
+      for (Application app in cache.getGlobalApplications()) {
+        for (PackageRef ref in app.getPackageRefs()) {
+          expect(ref.resolve(), isNotNull);
+        }
+      }
+
+      for (PackageRef ref in cache.getPackageRefs()) {
+        expect(ref.resolve(), isNotNull);
+      }
     });
   });
 }

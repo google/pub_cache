@@ -14,7 +14,6 @@ import 'src/impl.dart';
 
 /// A programmatic API for reflecting on Pub's cache directory.
 class PubCache {
-
   /// Return the location of Pub's package cache.
   static Directory getSystemCacheLocation() {
     Map env = Platform.environment;
