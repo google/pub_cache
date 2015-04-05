@@ -13,6 +13,7 @@ to find all the applications that have been activated:
 
 ```dart
 PubCache cache = new PubCache();
+
 for (Application app in cache.getGlobalApplications()) {
   print('activated app: ${app.name}, version: ${app.version}');
 }
