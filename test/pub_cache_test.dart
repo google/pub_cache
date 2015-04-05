@@ -147,7 +147,6 @@ void defineTests() {
       StringBuffer buf = new StringBuffer();
       PubCache cache = new PubCache();
       var packages = cache.getCachedPackages();
-      packages.sort();
       packages.forEach((pkg) {
         List versions = cache.getAllPackageVersions(pkg);
         buf.writeln(
