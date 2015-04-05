@@ -133,4 +133,20 @@ void defineTests() {
       expect(p.toString(), isNotEmpty);
     });
   });
+
+  group('integration', () {
+    test('list', () {
+      PubCache cache = new PubCache();
+      var apps = cache.getGlobalApplications();
+      print('${apps.length} activated applications:');
+      apps.forEach((app) => print('  ${app}'));
+
+      var packages = cache.getCachedPackages();
+      print('\n${packages.length} packages in cache:');
+      packages.forEach((pkg) {
+        List versions = cache.getAllPackageVersions(pkg);
+        print('  ${pkg} [${versions.map((p) => p.version.toString()).join(', ')}]');
+      });
+    });
+  });
 }

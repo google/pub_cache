@@ -10,6 +10,8 @@ import 'package:path/path.dart' as path;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
+import 'src/impl.dart';
+
 /// A programmatic API for reflecting on Pub's cache directory.
 class PubCache {
 
@@ -106,13 +108,19 @@ class PubCache {
     if (dartlangDir.existsSync()) {
       _packageRefs = dartlangDir.listSync()
           .where((dir) => dir is Directory)
-          .map((dir) => new _DirectoryPackageRef('hosted', dir))
+          .map((dir) => new DirectoryPackageRef('hosted', dir))
           .toList();
     }
 
-    // TODO: Scan for git packages (ignore the git/cache directory).
+    // Scan for git packages (ignore the git/cache directory).
     // ace-a1a140cc933e7d44d2955a6d6033308754bb9235
-
+    Directory gitDir = new Directory(path.join(location.path, 'git'));
+    if (gitDir.existsSync()) {
+      Iterable gitRefs = gitDir.listSync()
+          .where((dir) => dir is Directory && path.basename(dir.path) != 'cache')
+          .map((dir) => new GitDirectoryPackageRef(dir));
+      _packageRefs.addAll(gitRefs);
+    }
   }
 
   Directory _getSubDir(Directory dir, String name) =>
@@ -162,7 +170,24 @@ class Application {
     Map packages = doc['packages'];
     _packageRefs = packages.keys.map((key) {
       Map m = packages[key];
-      return new _AppPackageRef(_cache, m['source'], key, m['version']);
+      String source = m['source'];
+      if (source == 'git') {
+        return new PackageRefImpl.git(key, m['version'], m['description'], (curRef) {
+          for (PackageRef ref in _cache.getPackageRefs()) {
+            if (ref == curRef) return ref.resolve();
+          }
+          return null;
+        });
+      } else if (source == 'hosted') {
+        return new PackageRefImpl.hosted(key, m['version'], (curRef) {
+          for (PackageRef ref in _cache.getPackageRefs()) {
+            if (ref == curRef) return ref.resolve();
+          }
+          return null;
+        });
+      } else {
+        return new PackageRefImpl(source, key, m['version']);
+      }
     }).toList();
   }
 }
@@ -188,47 +213,6 @@ abstract class PackageRef {
   }
 
   String toString() => '${name} ${version}';
-}
-
-class _AppPackageRef extends PackageRef {
-  final PubCache cache;
-  final String sourceType;
-  final String name;
-  final Version version;
-
-  _AppPackageRef(this.cache, this.sourceType, this.name, String ver) :
-      version = new Version.parse(ver);
-
-  Package resolve() {
-    for (PackageRef ref in cache.getPackageRefs()) {
-      if (ref == this) return ref.resolve();
-    }
-
-    return null;
-  }
-}
-
-class _DirectoryPackageRef extends PackageRef {
-  final String sourceType;
-  final Directory directory;
-
-  String _name;
-  Version _version;
-
-  _DirectoryPackageRef(this.sourceType, this.directory) {
-    _name = path.basename(this.directory.path);
-
-    int index = _name.indexOf('-');
-    if (index != -1) {
-      _version = new Version.parse(_name.substring(index + 1));
-      _name = _name.substring(0, index);
-    }
-  }
-
-  String get name => _name;
-  Version get version => _version;
-
-  Package resolve() => new Package(directory, name, version);
 }
 
 /// A representation of a package, including the name, version, and location on
