@@ -7,7 +7,9 @@
 # Fast fail the script on failures.
 set -e
 
+# Activate some packages for use while running tests.
 pub global activate dart_coveralls
+pub global activate --source git https://github.com/dart-lang/pub_cache.git
 
 # Verify that the libraries are error free.
 dartanalyzer --fatal-warnings \
@@ -18,7 +20,7 @@ dartanalyzer --fatal-warnings \
 # Run the tests.
 dart test/all.dart
 
-# Install dart_coveralls; gather and send coverage data.
+# Gather and send coverage data.
 if [ "$COVERALLS_TOKEN" ]; then
   pub global run dart_coveralls report \
     --token $COVERALLS_TOKEN \
