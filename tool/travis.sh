@@ -9,7 +9,8 @@ set -e
 
 # Activate some packages for use while running tests.
 pub global activate dart_coveralls
-pub global activate --source git https://github.com/dart-lang/pub_cache.git
+pub global activate --source git https://github.com/dart-lang/test.git
+pub global activate --source path .
 
 # Verify that the libraries are error free.
 dartanalyzer --fatal-warnings \
