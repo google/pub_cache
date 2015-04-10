@@ -185,6 +185,8 @@ class Application {
           }
           return null;
         });
+      } else if (source == 'path') {
+        return new PackageRefImpl.path(key, m['version'], m['description']);
       } else {
         return new PackageRefImpl(source, key, m['version']);
       }

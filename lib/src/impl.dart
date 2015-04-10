@@ -29,6 +29,10 @@ class PackageRefImpl extends PackageRef {
     return new GitPackageRefImpl(name, ver, description, resolver);
   }
 
+  factory PackageRefImpl.path(String name, String ver, Map description) {
+    return new PathPackageRefImpl(name, ver, description);
+  }
+
   Package resolve() => _resolver == null ? null : _resolver(this);
 }
 
@@ -47,6 +51,25 @@ class GitPackageRefImpl extends PackageRefImpl {
   String get url => _description['url'];
 }
 
+class PathPackageRefImpl extends PackageRefImpl {
+  final Map _description;
+
+  PathPackageRefImpl(String name, String ver, this._description) :
+      super('path', name, ver);
+
+  /// The path to the local package.
+  String get path => _description['path'];
+
+  bool get relative => _description['relative'] == true;
+
+  Package resolve() {
+    Directory dir = new Directory(path);
+    return dir.existsSync() ? new Package(dir, name, version) : null;
+  }
+}
+
+/// A reference to a package in the pub cache (for instance, something in
+/// `~/.pub-cache/hosted/pub.dartlang.org/`).
 class DirectoryPackageRef extends PackageRef {
   final String sourceType;
   final Directory directory;
@@ -70,6 +93,7 @@ class DirectoryPackageRef extends PackageRef {
   Package resolve() => new Package(directory, name, version);
 }
 
+/// A reference to a package in the pub cache; something in `~/.pub-cache/git/`.
 class GitDirectoryPackageRef extends PackageRef {
   final String sourceType;
   final Directory directory;
