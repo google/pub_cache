@@ -8,8 +8,9 @@
 set -e
 
 # Activate some packages for use while running tests.
-pub global activate dart_coveralls 0.1.10
 pub global activate dart_coveralls
+pub global activate path 1.3.0
+pub global activate path
 pub global activate --source git https://github.com/dart-lang/test.git
 pub global activate --source path .
 

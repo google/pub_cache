@@ -143,14 +143,25 @@ void defineTests() {
       expect(buf.toString(), isNotEmpty);
     });
 
+    test('everything parses', () {
+      StringBuffer buf = new StringBuffer();
+      PubCache cache = new PubCache();
+      var packageRefs = cache.getPackageRefs();
+      packageRefs.forEach((ref) {
+        expect(ref.version, isNotNull);
+        buf.writeln('${ref}');
+      });
+      expect(buf.toString(), isNotEmpty);
+    });
+
     test('list packages', () {
       StringBuffer buf = new StringBuffer();
       PubCache cache = new PubCache();
       var packages = cache.getCachedPackages();
       packages.forEach((pkg) {
-        List versions = cache.getAllPackageVersions(pkg);
+        List<PackageRef> versions = cache.getAllPackageVersions(pkg);
         buf.writeln(
-            '  ${pkg} [${versions.map((p) => p.version.toString()).join(', ')}]');
+            '${pkg} [${versions.map((p) => p.version.toString()).join(', ')}]');
       });
       expect(buf.toString(), isNotEmpty);
     });
