@@ -118,11 +118,13 @@ class GitDirectoryPackageRef extends PackageRef {
     }
 
     // Parse the version.
+    _version = Version.none;
     File f = new File(path.join(directory.path, 'pubspec.yaml'));
     if (f.existsSync()) {
       Map pubspec = yaml.loadYaml(f.readAsStringSync());
-      _version = pubspec.containsKey('version')
-          ? new Version.parse(pubspec['version']) : Version.none;
+      if (pubspec.containsKey('version')) {
+        _version = new Version.parse(pubspec['version']);
+      }
     }
   }
 

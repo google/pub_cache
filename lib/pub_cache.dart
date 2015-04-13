@@ -143,7 +143,7 @@ class Application {
   /// The version of the application and of the defining package.
   Version get version {
     PackageRef ref = getDefiningPackageRef();
-    return ref == null ? null : ref.version;
+    return ref == null ? Version.none : ref.version;
   }
 
   /// Return the reference to the defining package. This is the package that
