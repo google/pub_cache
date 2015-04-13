@@ -44,11 +44,13 @@ class GitPackageRefImpl extends PackageRefImpl {
     _resolver = resolver;
   }
 
+  /// The git url.
+  String get url => _description['url'];
+
   /// The git commit.
   String get resolvedRef => _description['resolved-ref'];
 
-  /// The git url.
-  String get url => _description['url'];
+  String toString() => '${name} ${version} (${url}, ${resolvedRef})';
 }
 
 class PathPackageRefImpl extends PackageRefImpl {
@@ -66,6 +68,8 @@ class PathPackageRefImpl extends PackageRefImpl {
     Directory dir = new Directory(path);
     return dir.existsSync() ? new Package(dir, name, version) : null;
   }
+
+  String toString() => '${name} ${version} (${path}, relative=${relative})';
 }
 
 /// A reference to a package in the pub cache (for instance, something in
@@ -84,6 +88,8 @@ class DirectoryPackageRef extends PackageRef {
     if (index != -1) {
       _version = new Version.parse(_name.substring(index + 1));
       _name = _name.substring(0, index);
+    } else {
+      _version = Version.none;
     }
   }
 
@@ -115,11 +121,8 @@ class GitDirectoryPackageRef extends PackageRef {
     File f = new File(path.join(directory.path, 'pubspec.yaml'));
     if (f.existsSync()) {
       Map pubspec = yaml.loadYaml(f.readAsStringSync());
-      if (pubspec['version'] == null) {
-        _version = Version.none;
-      } else {
-        _version = new Version.parse(pubspec['version']);
-      }
+      _version = pubspec.containsKey('version')
+          ? new Version.parse(pubspec['version']) : Version.none;
     }
   }
 
@@ -130,4 +133,6 @@ class GitDirectoryPackageRef extends PackageRef {
   String get resolvedRef => _resolvedRef;
 
   Package resolve() => new Package(directory, name, version);
+
+  String toString() => '${name} ${version} (${resolvedRef})';
 }
