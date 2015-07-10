@@ -8,7 +8,9 @@ import 'dart:io';
 
 import 'package:path/path.dart' as path;
 import 'package:pub_cache/pub_cache.dart';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
+
+void main() => defineTests();
 
 void defineTests() {
   final String cacheDirName = Platform.isWindows ? 'Cache' : 'pub-cache';
