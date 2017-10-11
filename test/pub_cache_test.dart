@@ -16,10 +16,37 @@ void defineTests() {
   final String cacheDirName = Platform.isWindows ? 'Cache' : 'pub-cache';
 
   group('PubCache', () {
+    tearDown(() {
+      Directory cacheDir = PubCache.getSystemCacheLocation();
+      var globalDir = new Directory(path.join(cacheDir.path, "global_packages"));
+      var file = new File(path.join(globalDir.path, "nonsense"));
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+    });
+
     test('getSystemCacheLocation', () {
       Directory cacheDir = PubCache.getSystemCacheLocation();
       expect(cacheDir, isNotNull);
       expect(path.basename(cacheDir.path), contains(cacheDirName));
+    });
+
+    test('Create PubCache when non-directories are in global_packages', () {
+      // Get cache in its current state
+      var cache = new PubCache();
+      var currentGlobalApps = cache.getGlobalApplications();
+
+      // Put a file in global_packages
+      Directory cacheDir = PubCache.getSystemCacheLocation();
+      var globalDir = new Directory(path.join(cacheDir.path, "global_packages"));
+      var file = new File(path.join(globalDir.path, "nonsense"));
+      file.writeAsStringSync("pub_cache test suite");
+
+      // Ensure that this file is not reflected in cache
+      cache = new PubCache();
+      var newGlobalApps = cache.getGlobalApplications();
+
+      expect(currentGlobalApps.length, newGlobalApps.length);
     });
 
     test('PubCache', () {
