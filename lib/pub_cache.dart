@@ -96,8 +96,11 @@ class PubCache {
 
     Directory globalPackagesDir = _getSubDir(location, 'global_packages');
     if (globalPackagesDir.existsSync()) {
-      _applications = globalPackagesDir.listSync().map(
-          (dir) => new Application._(this, dir)).toList();
+      _applications = globalPackagesDir
+          .listSync()
+          .where((item) => item is Directory)
+          .map((dir) => new Application._(this, dir))
+          .toList();
     }
 
     // Scan hosted packages - just pub.dartlang.org for now.
