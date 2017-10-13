@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.1
+- fixed an issue with global_packages enumeration
+
 ## 0.1.0
 - release as 0.1.0
 
