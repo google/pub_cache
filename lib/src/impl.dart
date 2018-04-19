@@ -19,13 +19,15 @@ class PackageRefImpl extends PackageRef {
 
   Function _resolver;
 
-  PackageRefImpl(this.sourceType, this.name, String ver) :
-      version = new Version.parse(ver);
+  PackageRefImpl(this.sourceType, this.name, String ver)
+      : version = new Version.parse(ver);
 
-  PackageRefImpl.hosted(this.name, String ver, this._resolver) :
-    sourceType = 'hosted', version = new Version.parse(ver);
+  PackageRefImpl.hosted(this.name, String ver, this._resolver)
+      : sourceType = 'hosted',
+        version = new Version.parse(ver);
 
-  factory PackageRefImpl.git(String name, String ver, Map description, Function resolver) {
+  factory PackageRefImpl.git(
+      String name, String ver, Map description, Function resolver) {
     return new GitPackageRefImpl(name, ver, description, resolver);
   }
 
@@ -39,8 +41,9 @@ class PackageRefImpl extends PackageRef {
 class GitPackageRefImpl extends PackageRefImpl {
   final Map _description;
 
-  GitPackageRefImpl(String name, String ver, this._description, Function resolver) :
-      super('git', name, ver) {
+  GitPackageRefImpl(
+      String name, String ver, this._description, Function resolver)
+      : super('git', name, ver) {
     _resolver = resolver;
   }
 
@@ -56,8 +59,8 @@ class GitPackageRefImpl extends PackageRefImpl {
 class PathPackageRefImpl extends PackageRefImpl {
   final Map _description;
 
-  PathPackageRefImpl(String name, String ver, this._description) :
-      super('path', name, ver);
+  PathPackageRefImpl(String name, String ver, this._description)
+      : super('path', name, ver);
 
   /// The path to the local package.
   String get path => _description['path'];

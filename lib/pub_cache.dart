@@ -36,15 +36,17 @@ class PubCache {
 
   /// Create a pubcache instance. [dir] defaults to the default platform pub
   /// cache location.
-  PubCache([Directory dir]) :
-      location = dir == null ? getSystemCacheLocation() : dir {
+  PubCache([Directory dir])
+      : location = dir == null ? getSystemCacheLocation() : dir {
     _parse();
   }
 
   /// Return the contents of `bin/` - the scripts for the activated applications.
   List<File> getBinScripts() {
     Directory dir = _getSubDir(location, 'bin');
-    return dir.existsSync() ? dir.listSync() : [];
+    return dir.existsSync()
+        ? dir.listSync().where((entity) => entity is File).cast<File>().toList()
+        : <File>[];
   }
 
   /// Return applications that have been installed via `pub global activate`.
@@ -57,7 +59,7 @@ class PubCache {
   /// Return the list of package names (not versions) that are available in the
   /// cache.
   List<String> getCachedPackages() =>
-      new Set.from(getPackageRefs().map((p) => p.name)).toList();
+      new Set<String>.from(getPackageRefs().map((p) => p.name)).toList();
 
   /// Return all available cached versions for a given package.
   List<PackageRef> getAllPackageVersions(String packageName) =>
@@ -67,7 +69,8 @@ class PubCache {
   /// cache. This method will prefer to return only release verions. If
   /// [includePreRelease] is true, then the very latest verision will be
   /// returned, include pre-release versions.
-  PackageRef getLatestVersion(String packageName, {bool includePreRelease: false}) {
+  PackageRef getLatestVersion(String packageName,
+      {bool includePreRelease: false}) {
     List<PackageRef> refs = getAllPackageVersions(packageName);
 
     if (refs.isEmpty) return null;
@@ -104,23 +107,25 @@ class PubCache {
     }
 
     // Scan hosted packages - just pub.dartlang.org for now.
-    _packageRefs = [];
+    _packageRefs = <PackageRef>[];
 
-    Directory dartlangDir = new Directory(
-        path.join(location.path, 'hosted', 'pub.dartlang.org'));
+    Directory dartlangDir =
+        new Directory(path.join(location.path, 'hosted', 'pub.dartlang.org'));
     if (dartlangDir.existsSync()) {
-      _packageRefs = dartlangDir.listSync()
+      _packageRefs.addAll(dartlangDir
+          .listSync()
           .where((dir) => dir is Directory)
-          .map((dir) => new DirectoryPackageRef('hosted', dir))
-          .toList();
+          .map((dir) => new DirectoryPackageRef('hosted', dir)));
     }
 
     // Scan for git packages (ignore the git/cache directory).
     // ace-a1a140cc933e7d44d2955a6d6033308754bb9235
     Directory gitDir = new Directory(path.join(location.path, 'git'));
     if (gitDir.existsSync()) {
-      Iterable gitRefs = gitDir.listSync()
-          .where((dir) => dir is Directory && path.basename(dir.path) != 'cache')
+      Iterable<PackageRef> gitRefs = gitDir
+          .listSync()
+          .where(
+              (dir) => dir is Directory && path.basename(dir.path) != 'cache')
           .map((dir) => new GitDirectoryPackageRef(dir));
       _packageRefs.addAll(gitRefs);
     }
@@ -175,7 +180,8 @@ class Application {
       Map m = packages[key];
       String source = m['source'];
       if (source == 'git') {
-        return new PackageRefImpl.git(key, m['version'], m['description'], (curRef) {
+        return new PackageRefImpl.git(key, m['version'], m['description'],
+            (curRef) {
           for (PackageRef ref in _cache.getPackageRefs()) {
             if (ref == curRef) return ref.resolve();
           }
@@ -202,8 +208,10 @@ class Application {
 abstract class PackageRef {
   /// The type of the package reference. Valid types include `hosted` and `git`.
   String get sourceType;
+
   /// The name of the package.
   String get name;
+
   /// The version of the package.
   Version get version;
 
@@ -212,9 +220,9 @@ abstract class PackageRef {
   Package resolve();
 
   bool operator ==(other) {
-    return this.sourceType == other.sourceType
-        && this.name == other.name
-        && this.version == other.version;
+    return this.sourceType == other.sourceType &&
+        this.name == other.name &&
+        this.version == other.version;
   }
 
   String toString() => '${name} ${version}';
