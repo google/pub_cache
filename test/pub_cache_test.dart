@@ -18,7 +18,8 @@ void defineTests() {
   group('PubCache', () {
     tearDown(() {
       Directory cacheDir = PubCache.getSystemCacheLocation();
-      var globalDir = new Directory(path.join(cacheDir.path, "global_packages"));
+      var globalDir =
+          new Directory(path.join(cacheDir.path, "global_packages"));
       var file = new File(path.join(globalDir.path, "nonsense"));
       if (file.existsSync()) {
         file.deleteSync();
@@ -38,7 +39,8 @@ void defineTests() {
 
       // Put a file in global_packages
       Directory cacheDir = PubCache.getSystemCacheLocation();
-      var globalDir = new Directory(path.join(cacheDir.path, "global_packages"));
+      var globalDir =
+          new Directory(path.join(cacheDir.path, "global_packages"));
       var file = new File(path.join(globalDir.path, "nonsense"));
       file.writeAsStringSync("pub_cache test suite");
 
@@ -88,7 +90,8 @@ void defineTests() {
 
     test('getLatestVersion.dev', () {
       PubCache cache = new PubCache();
-      expect(cache.getLatestVersion('path', includePreRelease: true), isNotNull);
+      expect(
+          cache.getLatestVersion('path', includePreRelease: true), isNotNull);
     });
   });
 

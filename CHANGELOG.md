@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.0
+- upgraded to support Dart 2
+
 ## 0.1.1
 - fixed an issue with global_packages enumeration
 
