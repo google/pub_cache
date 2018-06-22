@@ -20,8 +20,8 @@ dartanalyzer --fatal-warnings \
   lib/ \
   test/
 
-# Ensure the example works in Dart 2.
-dart --preview-dart-2 example/list.dart
+# Ensure the example works.
+dart example/list.dart
 
 # Run the tests.
-dart --preview-dart-2 test/all.dart
+dart test/all.dart
