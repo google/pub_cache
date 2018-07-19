@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.1
+- Dart 2 dependency upgrades
+
 ## 0.2.0
 - upgraded to support Dart 2
 

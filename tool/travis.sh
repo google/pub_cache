@@ -15,10 +15,7 @@ pub global activate --source git https://github.com/dart-lang/test.git
 pub global activate --source path .
 
 # Verify that the libraries are error free.
-dartanalyzer --fatal-warnings \
-  example/ \
-  lib/ \
-  test/
+dartanalyzer --fatal-warnings .
 
 # Ensure the example works.
 dart example/list.dart
