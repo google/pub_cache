@@ -3,6 +3,8 @@ dart:
   - dev
   - stable
 
+install: ./tool/travis-setup.sh
+
 jobs:
   include:
     - stage: test
