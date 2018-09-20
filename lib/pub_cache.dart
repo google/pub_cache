@@ -35,7 +35,8 @@ class PubCache {
   List<PackageRef> _packageRefs;
 
   String get _hostedPackageDirectoryName {
-    final url = Uri.parse(Platform.environment['PUB_HOSTED_URL'] ?? 'https://pub.dartlang.org');
+    final url = Uri.parse(
+        Platform.environment['PUB_HOSTED_URL'] ?? 'https://pub.dartlang.org');
     return url.host;
   }
 
@@ -114,8 +115,8 @@ class PubCache {
     // Scan hosted packages
     _packageRefs = <PackageRef>[];
 
-    Directory dartlangDir =
-        new Directory(path.join(location.path, 'hosted', _hostedPackageDirectoryName));
+    Directory dartlangDir = new Directory(
+        path.join(location.path, 'hosted', _hostedPackageDirectoryName));
     if (dartlangDir.existsSync()) {
       _packageRefs.addAll(dartlangDir
           .listSync()
