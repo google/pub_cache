@@ -34,6 +34,11 @@ class PubCache {
   List<Application> _applications;
   List<PackageRef> _packageRefs;
 
+  String get _hostedPackageDirectoryName {
+    final url = Uri.parse(Platform.environment['PUB_HOSTED_URL'] ?? 'https://pub.dartlang.org');
+    return url.host;
+  }
+
   /// Create a pubcache instance. [dir] defaults to the default platform pub
   /// cache location.
   PubCache([Directory dir])
@@ -106,11 +111,11 @@ class PubCache {
           .toList();
     }
 
-    // Scan hosted packages - just pub.dartlang.org for now.
+    // Scan hosted packages
     _packageRefs = <PackageRef>[];
 
     Directory dartlangDir =
-        new Directory(path.join(location.path, 'hosted', 'pub.dartlang.org'));
+        new Directory(path.join(location.path, 'hosted', _hostedPackageDirectoryName));
     if (dartlangDir.existsSync()) {
       _packageRefs.addAll(dartlangDir
           .listSync()

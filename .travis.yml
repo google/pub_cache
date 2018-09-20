@@ -1,7 +1,15 @@
 language: dart
 dart:
   - dev
-script: ./tool/travis.sh
+  - stable
+
+jobs:
+  include:
+    - stage: test
+      script: ./tool/travis.sh
+      env: PUB_HOSTED_URL=https://pub.flutter-io.cn
+    - stage: test
+      script: ./tool/travis.sh
 
 branches:
   only:
