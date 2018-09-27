@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+- Uses PUB_HOSTED_URL for finding hosted packages
+
 ## 0.2.1
 - Dart 2 dependency upgrades
 

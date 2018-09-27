@@ -106,11 +106,11 @@ class PubCache {
           .toList();
     }
 
-    // Scan hosted packages - just pub.dartlang.org for now.
+    // Scan hosted packages
     _packageRefs = <PackageRef>[];
 
-    Directory dartlangDir =
-        new Directory(path.join(location.path, 'hosted', 'pub.dartlang.org'));
+    Directory dartlangDir = new Directory(
+        path.join(location.path, 'hosted', _getHostedPackageDirectoryName()));
     if (dartlangDir.existsSync()) {
       _packageRefs.addAll(dartlangDir
           .listSync()
@@ -133,6 +133,12 @@ class PubCache {
 
   Directory _getSubDir(Directory dir, String name) =>
       new Directory(path.join(dir.path, name));
+
+  String _getHostedPackageDirectoryName() {
+    final url = Uri.parse(
+        Platform.environment['PUB_HOSTED_URL'] ?? 'https://pub.dartlang.org');
+    return url.host;
+  }
 }
 
 /// A Dart application; a package with an entry-point, available via `pub global
