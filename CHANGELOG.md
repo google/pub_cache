@@ -1,7 +1,9 @@
 # Changelog
 
-## 0.2.2
+## 0.2.3
+- repo moved to https://github.com/google/pub_cache
 
+## 0.2.2
 - Uses PUB_HOSTED_URL for finding hosted packages
 
 ## 0.2.1

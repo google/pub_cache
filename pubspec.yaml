@@ -1,11 +1,11 @@
 name: pub_cache
-version: 0.2.3-dev
+version: 0.2.3
 description: A library to reflect on the local pub cache.
 author: Devon Carew <devoncarew@google.com>
 homepage: https://github.com/google/pub_cache
 
 environment:
-  sdk: '>=2.0.0-dev.17.0 <3.0.0'
+  sdk: '>=2.0.0 <3.0.0'
 
 dependencies:
   path: ^1.0.0
