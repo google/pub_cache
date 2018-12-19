@@ -23,9 +23,9 @@ All submissions, including submissions by project members, require review.
 ### File headers
 All files in the project must start with the following header.
 
-    // Copyright (c) 2015, the Dart project authors.  Please see the AUTHORS file
-    // for details. All rights reserved. Use of this source code is governed by a
-    // BSD-style license that can be found in the LICENSE file.
+    // Copyright (c) 2014, Google Inc. Please see the AUTHORS file for details.
+    // All rights reserved. Use of this source code is governed by a BSD-style
+    // license that can be found in the LICENSE file.
 
 ### The small print
 Contributions made by corporations are covered by a different agreement than the
