@@ -17,7 +17,7 @@ class PackageRefImpl extends PackageRef {
   final String name;
   final Version version;
 
-  Function _resolver;
+  Function? _resolver;
 
   PackageRefImpl(this.sourceType, this.name, String ver)
       : version = new Version.parse(ver);
@@ -35,7 +35,7 @@ class PackageRefImpl extends PackageRef {
     return new PathPackageRefImpl(name, ver, description);
   }
 
-  Package resolve() => _resolver == null ? null : _resolver(this);
+  Package? resolve() => _resolver == null ? null : _resolver!(this);
 }
 
 class GitPackageRefImpl extends PackageRefImpl {
@@ -67,7 +67,7 @@ class PathPackageRefImpl extends PackageRefImpl {
 
   bool get relative => _description['relative'] == true;
 
-  Package resolve() {
+  Package? resolve() {
     Directory dir = new Directory(path);
     return dir.existsSync() ? new Package(dir, name, version) : null;
   }
@@ -81,8 +81,8 @@ class DirectoryPackageRef extends PackageRef {
   final String sourceType;
   final Directory directory;
 
-  String _name;
-  Version _version;
+  late String _name;
+  late Version _version;
 
   DirectoryPackageRef(this.sourceType, this.directory) {
     _name = path.basename(this.directory.path);
@@ -107,9 +107,9 @@ class GitDirectoryPackageRef extends PackageRef {
   final String sourceType;
   final Directory directory;
 
-  String _name;
-  Version _version;
-  String _resolvedRef;
+  late String _name;
+  late Version _version;
+  String? _resolvedRef;
 
   GitDirectoryPackageRef(this.directory) : sourceType = 'git' {
     _name = path.basename(this.directory.path);
@@ -135,7 +135,7 @@ class GitDirectoryPackageRef extends PackageRef {
   Version get version => _version;
 
   /// The git commit.
-  String get resolvedRef => _resolvedRef;
+  String? get resolvedRef => _resolvedRef;
 
   Package resolve() => new Package(directory, name, version);
 
