@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.0
+- Updated to null safety
+
 ## 0.2.3
 - repo moved to https://github.com/google/pub_cache
 
