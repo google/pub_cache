@@ -97,7 +97,7 @@ void defineTests() {
 
   group('Application', () {
     PubCache cache;
-    Application app;
+    late Application app;
 
     setUp(() {
       cache = new PubCache();
@@ -113,7 +113,7 @@ void defineTests() {
     });
 
     test('getDefiningPackageRef', () {
-      expect(app.getDefiningPackageRef().name, app.name);
+      expect(app.getDefiningPackageRef()!.name, app.name);
     });
 
     test('getPackageRefs', () {
@@ -127,8 +127,8 @@ void defineTests() {
 
   group('PackageRef', () {
     PubCache cache;
-    Application app;
-    PackageRef ref;
+    late Application app;
+    late PackageRef ref;
 
     setUp(() {
       cache = new PubCache();
@@ -160,7 +160,7 @@ void defineTests() {
   group('Package', () {
     test('toString', () {
       PubCache cache = new PubCache();
-      Package p = cache.getPackageRefs().first.resolve();
+      Package? p = cache.getPackageRefs().first.resolve();
       expect(p, isNotNull);
       expect(p.toString(), isNotEmpty);
     });

@@ -31,12 +31,12 @@ class PubCache {
   // The location of the pub cache.
   final Directory location;
 
-  List<Application> _applications;
-  List<PackageRef> _packageRefs;
+  late List<Application> _applications;
+  late List<PackageRef> _packageRefs;
 
   /// Create a pubcache instance. [dir] defaults to the default platform pub
   /// cache location.
-  PubCache([Directory dir])
+  PubCache([Directory? dir])
       : location = dir == null ? getSystemCacheLocation() : dir {
     _parse();
   }
@@ -69,7 +69,7 @@ class PubCache {
   /// cache. This method will prefer to return only release verions. If
   /// [includePreRelease] is true, then the very latest verision will be
   /// returned, include pre-release versions.
-  PackageRef getLatestVersion(String packageName,
+  PackageRef? getLatestVersion(String packageName,
       {bool includePreRelease: false}) {
     List<PackageRef> refs = getAllPackageVersions(packageName);
 
@@ -102,7 +102,7 @@ class PubCache {
       _applications = globalPackagesDir
           .listSync()
           .where((item) => item is Directory)
-          .map((dir) => new Application._(this, dir))
+          .map((dir) => new Application._(this, dir as Directory))
           .toList();
     }
 
@@ -115,7 +115,7 @@ class PubCache {
       _packageRefs.addAll(dartlangDir
           .listSync()
           .where((dir) => dir is Directory)
-          .map((dir) => new DirectoryPackageRef('hosted', dir)));
+          .map((dir) => new DirectoryPackageRef('hosted', dir as Directory)));
     }
 
     // Scan for git packages (ignore the git/cache directory).
@@ -126,7 +126,7 @@ class PubCache {
           .listSync()
           .where(
               (dir) => dir is Directory && path.basename(dir.path) != 'cache')
-          .map((dir) => new GitDirectoryPackageRef(dir));
+          .map((dir) => new GitDirectoryPackageRef(dir as Directory));
       _packageRefs.addAll(gitRefs);
     }
   }
@@ -147,7 +147,7 @@ class Application {
   final PubCache _cache;
   final Directory _dir;
 
-  List<PackageRef> _packageRefs;
+  List<PackageRef>? _packageRefs;
 
   Application._(this._cache, this._dir);
 
@@ -156,13 +156,13 @@ class Application {
 
   /// The version of the application and of the defining package.
   Version get version {
-    PackageRef ref = getDefiningPackageRef();
+    final ref = getDefiningPackageRef();
     return ref == null ? Version.none : ref.version;
   }
 
   /// Return the reference to the defining package. This is the package that
   /// defines the application.
-  PackageRef getDefiningPackageRef() {
+  PackageRef? getDefiningPackageRef() {
     for (PackageRef ref in getPackageRefs()) {
       if (ref.name == name) return ref;
     }
@@ -173,7 +173,7 @@ class Application {
   /// defining package as well as the direct and transitive dependencies.
   List<PackageRef> getPackageRefs() {
     if (_packageRefs == null) _parsePubspecLock();
-    return _packageRefs;
+    return _packageRefs!;
   }
 
   String toString() => '${name} ${version}';
@@ -223,10 +223,11 @@ abstract class PackageRef {
 
   /// Resolve the package reference into the actual package, including the
   /// location on disk.
-  Package resolve();
+  Package? resolve();
 
   bool operator ==(other) {
-    return this.sourceType == other.sourceType &&
+    return other is PackageRef &&
+        this.sourceType == other.sourceType &&
         this.name == other.name &&
         this.version == other.version;
   }
