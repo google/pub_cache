@@ -25,5 +25,13 @@ jobs:
       - name: dart analyze
         run: dart analyze --fatal-infos
 
+      # Set up some test data.
+      - name: Set up test data
+        run: ./tool/setup.sh
+
       - name: dart test
         run: dart test
+
+      # Ensure the example works
+      - name: Test example/list.dart
+        run: dart example/list.dart
