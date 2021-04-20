@@ -22,11 +22,16 @@ class PubCache {
     if (env.containsKey('PUB_CACHE')) {
       return new Directory(env['PUB_CACHE']);
     } else if (Platform.operatingSystem == 'windows') {
-      var pub = new Directory(path.join(env['LOCALAPPDATA'], 'Pub', 'Cache'));
-      if (!pub.existsSync()) {
-        pub = new Directory(path.join(env['APPDATA'], 'Pub', 'Cache'));
+      var pubPreferred =
+          new Directory(path.join(env['LOCALAPPDATA'], 'Pub', 'Cache'));
+      if (!pubPreferred.existsSync()) {
+        var alternate =
+            new Directory(path.join(env['APPDATA'], 'Pub', 'Cache'));
+        if (alternate.existsSync()) {
+          return alternate;
+        }
       }
-      return pub;
+      return pubPreferred;
     } else {
       return new Directory('${env['HOME']}/.pub-cache');
     }
