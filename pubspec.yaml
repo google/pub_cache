@@ -1,5 +1,5 @@
 name: pub_cache
-version: 0.3.0
+version: 0.3.1
 description: A library to reflect on the local pub cache.
 homepage: https://github.com/google/pub_cache
 

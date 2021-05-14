@@ -22,6 +22,8 @@ class PubCache {
     if (env.containsKey('PUB_CACHE')) {
       return new Directory(env['PUB_CACHE']);
     } else if (Platform.isWindows) {
+      // See https://github.com/dart-lang/pub/blob/master/lib/src/system_cache.dart.
+
       // %LOCALAPPDATA% is preferred as the cache location over %APPDATA%, because the latter is synchronised between
       // devices when the user roams between them, whereas the former is not.
       // The default cache dir used to be in %APPDATA%, so to avoid breaking old installs,

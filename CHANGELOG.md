@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.1
+- Update the Windows search path to also look in LOCALAPPDATA.
+
 ## 0.3.0
 - Updated to null safety
 
