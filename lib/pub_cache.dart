@@ -21,8 +21,18 @@ class PubCache {
 
     if (env.containsKey('PUB_CACHE')) {
       return new Directory(env['PUB_CACHE']);
-    } else if (Platform.operatingSystem == 'windows') {
-      return new Directory(path.join(env['APPDATA'], 'Pub', 'Cache'));
+    } else if (Platform.isWindows) {
+      // %LOCALAPPDATA% is preferred as the cache location over %APPDATA%, because the latter is synchronised between
+      // devices when the user roams between them, whereas the former is not.
+      // The default cache dir used to be in %APPDATA%, so to avoid breaking old installs,
+      // we use the old dir in %APPDATA% if it exists. Else, we use the new default location
+      // in %LOCALAPPDATA%.
+      var appDataCacheDir =
+          new Directory(path.join(env['APPDATA'], 'Pub', 'Cache'));
+      if (appDataCacheDir.existsSync()) {
+        return appDataCacheDir;
+      }
+      return new Directory(path.join(env['LOCALAPPDATA'], 'Pub', 'Cache'));
     } else {
       return new Directory('${env['HOME']}/.pub-cache');
     }
