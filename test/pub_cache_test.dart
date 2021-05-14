@@ -126,7 +126,7 @@ void defineTests() {
   });
 
   group('PackageRef', () {
-    PubCache cache;
+    late PubCache cache;
     late Application app;
     late PackageRef ref;
 
@@ -141,6 +141,9 @@ void defineTests() {
     });
 
     test('==', () {
+      Application app = cache
+          .getGlobalApplications()
+          .firstWhere((app) => app.getPackageRefs().length > 1);
       PackageRef ref0 = app.getPackageRefs()[0];
       PackageRef ref1 = app.getPackageRefs()[1];
 
