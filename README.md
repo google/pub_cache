@@ -1,9 +1,13 @@
-# pub_cache
+[![Dart](https://github.com/google/pub_cache/actions/workflows/build.yaml/badge.svg)](https://github.com/google/pub_cache/actions/workflows/build.yaml)
+[![pub package](http://img.shields.io/pub/v/pub_cache.svg)](https://pub.dartlang.org/packages/pub_cache)
 
 A library to reflect on the local pub cache.
 
-[![pub package](http://img.shields.io/pub/v/pub_cache.svg)](https://pub.dartlang.org/packages/pub_cache)
-[![Build Status](https://travis-ci.org/google/pub_cache.svg)](https://travis-ci.org/google/pub_cache)
+# Update - discontinued
+
+As per https://github.com/google/pub_cache/issues/48 we've discontinued this
+package. It was no longer used by the Dart team and has limited ecosystem usage.
+Possible recourse for people who are using it is listed in that issue.
 
 ## How do I use it?
 
