@@ -1,4 +1,6 @@
-# Changelog
+## 0.3.2
+
+- Updated the readme to reflect that this package has been discontinued.
 
 ## 0.3.1
 - Update the Windows search path to also look in LOCALAPPDATA.
